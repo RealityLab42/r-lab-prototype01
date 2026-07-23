@@ -45,6 +45,13 @@
   .eyebrow{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--faint);}
   .foot{padding:28px 40px;border-top:0.5px solid var(--line);display:flex;justify-content:space-between;font-size:11px;color:var(--faint);}
 
+  /* ---- GLOBAL WIDTH CAP ---- */
+  /* full-bleed blocks centered in a 1240 column */
+  .pagehead,.tagbar,.grid,.cs-video,.cs-quicklook,.credits,.prevnext,
+  .ab-cta,.ct-head,.ct-wrap,.ct-extra,.foot{max-width:1240px;margin-left:auto;margin-right:auto;width:100%;}
+  /* text-column blocks align their left edge to the same 40px inset as the centered frame */
+  .cs-title,.cs-block,.ab-lede,.ab-sec,.ab-quote,.jr-list{margin-left:max(0px,calc((100% - 1240px)/2));}
+
   .btn-coral{display:inline-block;background:var(--coral);color:var(--ink);padding:16px 36px;font-size:13px;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;border:none;cursor:pointer;font-family:var(--sans);transition:transform .15s;}
   .btn-coral:hover{transform:translateY(-1px);}
   .link-ul{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:0.5px solid var(--ink);padding-bottom:3px;}
@@ -97,6 +104,14 @@
   .cs-video .eyebrow{margin-bottom:20px;display:block;}
   .cs-video p{font-size:17px;line-height:1.65;margin-bottom:16px;}
   .cs-video .cap{font-size:11px;line-height:1.6;color:var(--faint);}
+  .cs-quicklook{padding:64px 40px;display:grid;grid-template-columns:420px 1fr;gap:56px;align-items:center;}
+  .cs-quicklook .ql-model{position:relative;aspect-ratio:1/1;background:#fafaf8;border:1px solid #eee;display:flex;align-items:center;justify-content:center;}
+  .cs-quicklook .ql-model model-viewer{width:80%;height:80%;background:transparent;--poster-color:transparent;}
+  .cs-quicklook .ql-badge{position:absolute;bottom:14px;left:16px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);}
+  .cs-quicklook .ql-text{max-width:400px;}
+  .cs-quicklook .ql-text .eyebrow{display:block;margin-bottom:18px;}
+  .cs-quicklook .ql-text p{font-size:17px;line-height:1.65;margin-bottom:16px;}
+  .cs-quicklook .ql-text .cap{font-size:11px;line-height:1.6;color:var(--faint);}
   .cs-g2{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
   .cs-g2 .cell{aspect-ratio:1/1;background:#fff;border:1px solid #e5e5e0;display:flex;align-items:center;justify-content:center;position:relative;}
   .cs-g2 .glblabel{position:absolute;bottom:14px;left:16px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);}
@@ -115,7 +130,7 @@
   .ab-lede .big{font-family:var(--serif);font-size:26px;line-height:1.5;letter-spacing:-0.01em;margin-bottom:32px;}
   .ab-lede p{font-size:17px;line-height:1.7;margin-bottom:22px;}
   .ab-lede .sign{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--muted);margin-top:8px;}
-  .ab-sec{padding:56px 40px 0;display:grid;grid-template-columns:180px 1fr;gap:56px;max-width:900px;}
+  .ab-sec{padding:56px 40px 0;display:grid;grid-template-columns:160px minmax(0,600px);gap:48px;max-width:900px;}
   .ab-sec .k{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--faint);padding-top:6px;}
   .ab-sec .body{max-width:560px;}
   .ab-sec .body p{font-size:17px;line-height:1.7;margin-bottom:22px;}
@@ -212,7 +227,9 @@
     .cs-video .textcol{padding:0 24px;order:1;}
     .cs-video .vid{order:2;margin-top:24px;}
     .cs-video p{font-size:16px;}
-    .cs-g2{grid-template-columns:1fr;}
+    .cs-quicklook{grid-template-columns:1fr;padding:40px 24px;gap:24px;}
+    .cs-quicklook .ql-text{max-width:none;}
+    .cs-quicklook .ql-text p{font-size:16px;}
     .credits{padding:28px 24px;gap:24px 48px;}
     .prevnext{grid-template-columns:1fr;}
     .prevnext .pn{border-right:none!important;border-bottom:0.5px solid var(--line);text-align:left!important;}
@@ -337,41 +354,33 @@
     <span class="eyebrow">The problem</span>
     <p>Photographs flatten food. Descriptions oversell it. Diners order blind and restaurants absorb the disappointment — in sent-back plates, in reviews, in the dishes nobody ever tries.</p>
   </div>
-  <div class="cs-solution">
-    <div class="order-text">
-      <div class="eyebrow">The solution</div>
-      <h2>Point your phone at the trigger.</h2>
-      <p>Scan the image to see the dish in your space. Works on any modern phone — no app required.</p>
-      <a class="btn-white">View in your space&nbsp;&nbsp;&rarr;</a>
-    </div>
-    <div class="trigger order-trigger">Trigger image</div>
-  </div>
   <div class="cs-video">
     <div class="textcol">
       <span class="eyebrow">In use</span>
-      <p>Fourteen dishes, photogrammetrically captured and rebuilt as interactive models. A single printed card on each table launches the whole menu.</p>
-      <div class="cap">Filmed at [Location]. Diners place the card, and the table fills with dishes at actual scale.</div>
+      <p>Fourteen dishes, photogrammetrically captured and rebuilt as three-dimensional models diners can see at actual scale on their own table.</p>
+      <div class="cap">Filmed at [Location].</div>
     </div>
     <div class="vid"><div class="play">&#9654;</div></div>
   </div>
-  <div class="cs-g2">
-    <div>
-      <div class="cell"><div style="width:55%;height:55%;background:linear-gradient(135deg,#e8e8e2,#b8b8b0);border-radius:6px;transform:rotate(8deg);"></div><div class="glblabel">GLB · Tap to explore</div></div>
-      <div class="cap">Braised short rib. 84k triangles, captured over two hours.</div>
+  <div class="cs-quicklook">
+    <div class="ql-model">
+      <model-viewer id="cube-case" class="rl-cube" src="R_LabLogoCube2.glb" interaction-prompt="none" disable-zoom camera-controls touch-action="pan-y" shadow-intensity="0"></model-viewer>
+      <div class="ql-badge">Placeholder · the dish model</div>
     </div>
-    <div>
-      <div class="cell"><div style="width:50%;height:50%;background:linear-gradient(135deg,#eee,#c8c8c0);border-radius:50%;"></div><div class="glblabel">GLB · Tap to explore</div></div>
-      <div class="cap">The trigger card, designed to survive a restaurant table.</div>
+    <div class="ql-text">
+      <span class="eyebrow">See it in your space</span>
+      <p>Drag to turn the dish. On a phone, tap to place it on your table at full size.</p>
+      <div class="cap">Braised short rib — one of fourteen dishes captured for the menu.</div>
     </div>
   </div>
-  <div class="cs-block" style="padding-top:72px;">
+  <div class="cs-block" style="padding-top:8px;">
     <span class="eyebrow">The outcome</span>
-    <p>The menu became the most-photographed object in the room. Servers stopped describing dishes and started handing over the card.</p>
+    <p>The menu became the most-photographed object in the room. Servers stopped describing dishes and started handing over the phone.</p>
   </div>
   <div class="credits">
     <div><div class="k">Client</div><div>[Client Name]</div></div>
     <div><div class="k">Year</div><div>2026</div></div>
-    <div><div class="k">Scope</div><div>Strategy · 3D capture · AR build</div></div>
+    <div><div class="k">Scope</div><div>Strategy · 3D capture · Build</div></div>
   </div>
   <div class="prevnext">
     <div class="pn" onclick="go('case')"><div class="k">&larr; Previous</div><div class="t">Sea level rise</div></div>
