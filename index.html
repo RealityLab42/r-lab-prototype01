@@ -91,9 +91,9 @@
   .cs-top-ql .ql-text .eyebrow{margin-bottom:12px;}
   .cs-top-ql .ql-text p{font-size:15px;line-height:1.6;margin-bottom:10px;}
   .cs-top-ql .ql-text .cap{font-size:11px;line-height:1.6;color:var(--faint);}
-  /* body: problem/in-use/outcome stacked left, tall video right, tops aligned */
-  .cs-body{display:grid;grid-template-columns:1fr 380px;gap:64px;align-items:stretch;padding-bottom:64px;}
-  .cs-body-text{display:flex;flex-direction:column;justify-content:space-between;}
+  /* body: text column rises toward the cube's lower third; video stays lower + larger */
+  .cs-body{display:grid;grid-template-columns:1fr 440px;gap:64px;align-items:start;padding-bottom:64px;}
+  .cs-body-text{display:flex;flex-direction:column;gap:56px;margin-top:-337px;}
   .cs-seg .eyebrow{margin-bottom:20px;}
   .cs-seg p{font-size:17px;line-height:1.65;max-width:520px;}
   .cs-seg .cap{font-size:11px;line-height:1.6;color:var(--faint);margin-top:12px;}
@@ -212,7 +212,7 @@
     .cs-top-text .brief{font-size:18px;}
     .cs-top-ql .ql-model{max-width:380px;margin-left:auto;margin-right:auto;}
     .cs-body{grid-template-columns:1fr;gap:32px;}
-    .cs-body-text{gap:32px;justify-content:flex-start;}
+    .cs-body-text{gap:32px;justify-content:flex-start;margin-top:0;}
     .cs-seg p{font-size:16px;}
     .cs-body-vid{max-width:340px;}
     .credits{gap:24px 48px;}
