@@ -50,11 +50,13 @@
   .link-ul{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:0.5px solid var(--ink);padding-bottom:3px;}
 
   /* ---- HERO (home) ---- */
-  .hero{position:relative;min-height:calc(100vh - 71px);padding:56px 40px 72px;overflow:hidden;}
-  .hero-glb{position:absolute;top:40px;right:-40px;width:460px;height:460px;border:1px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:1;overflow:hidden;}
-  .hero-glb model-viewer{width:82%;height:82%;background:transparent;--poster-color:transparent;}
+  .hero{position:relative;min-height:calc(100vh - 71px);overflow:hidden;}
+  /* centered frame keeps the composition intact at any width */
+  .hero-inner{position:relative;max-width:1400px;margin:0 auto;min-height:calc(100vh - 71px);padding:56px 40px 72px;}
+  .hero-glb{position:absolute;top:40px;right:-20px;width:min(46vw,560px);aspect-ratio:1/1;border:1px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:1;overflow:hidden;}
+  .hero-glb model-viewer{width:88%;height:88%;background:transparent;--poster-color:transparent;}
   .hero-eyebrow{position:absolute;top:60px;left:40px;z-index:3;}
-  .hero-h1{position:absolute;top:120px;left:40px;font-family:var(--serif);font-size:104px;line-height:0.92;font-weight:400;letter-spacing:-0.03em;z-index:3;color:#fff;mix-blend-mode:difference;}
+  .hero-h1{position:absolute;top:118px;left:40px;font-family:var(--serif);font-size:clamp(64px,8.2vw,116px);line-height:0.92;font-weight:400;letter-spacing:-0.03em;z-index:3;color:#fff;mix-blend-mode:difference;}
   .hero-lower{position:absolute;bottom:80px;left:40px;z-index:3;max-width:520px;}
   .hero-lower p{font-size:14px;line-height:1.55;color:var(--muted);max-width:340px;margin-bottom:32px;}
   .hero-scroll{position:absolute;bottom:32px;right:40px;z-index:3;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--faint);}
@@ -178,8 +180,9 @@
     .hamburger{display:flex;}
     .foot{padding:24px;flex-direction:column;gap:4px;font-size:10px;line-height:1.8;}
 
-    .hero{padding:24px 24px 40px;min-height:auto;text-align:center;}
-    .hero-glb{position:absolute;top:80px;left:50%;transform:translateX(-50%);right:auto;width:470px;height:470px;}
+    .hero{min-height:auto;text-align:center;}
+    .hero-inner{padding:24px 24px 40px;min-height:auto;max-width:none;}
+    .hero-glb{position:absolute;top:80px;left:50%;transform:translateX(-50%);right:auto;width:min(120vw,470px);height:auto;}
     .hero-eyebrow{position:relative;top:auto;left:auto;text-align:center;margin-bottom:28px;}
     .hero-h1{position:relative;top:auto;left:auto;font-size:54px;line-height:0.96;margin-bottom:340px;text-align:center;}
     .hero-lower{position:relative;bottom:auto;left:auto;max-width:none;text-align:center;}
@@ -288,8 +291,9 @@
 <!-- ============ HOME ============ -->
 <div class="page active" id="page-home">
   <div class="hero">
+   <div class="hero-inner">
     <div class="hero-glb">
-      <model-viewer src="R_LabLogoCube2.glb" auto-rotate rotation-per-second="18deg" camera-orbit="0deg 75deg 105%" interaction-prompt="none" disable-zoom camera-controls touch-action="pan-y" shadow-intensity="0"></model-viewer>
+      <model-viewer id="cube-hero" class="rl-cube" src="R_LabLogoCube2.glb" interaction-prompt="none" disable-zoom camera-controls touch-action="pan-y" shadow-intensity="0"></model-viewer>
     </div>
     <div class="hero-eyebrow eyebrow">Featured · Q4 2026</div>
     <h1 class="hero-h1">AR menus<br>that sell<br>themselves.</h1>
@@ -298,6 +302,7 @@
       <a class="btn-coral" onclick="go('case')">Case Study&nbsp;&nbsp;&rarr;</a>
     </div>
     <div class="hero-scroll">Scroll &darr;</div>
+   </div>
   </div>
 </div>
 
@@ -500,7 +505,7 @@
   </div>
   <div class="ct-wrap">
     <div class="ct-glb">
-      <model-viewer src="R_LabLogoCube2.glb" auto-rotate rotation-per-second="16deg" camera-orbit="0deg 75deg 110%" interaction-prompt="none" disable-zoom camera-controls touch-action="pan-y" shadow-intensity="0"></model-viewer>
+      <model-viewer id="cube-contact" class="rl-cube" src="R_LabLogoCube2.glb" interaction-prompt="none" disable-zoom camera-controls touch-action="pan-y" shadow-intensity="0"></model-viewer>
     </div>
     <div class="ct-form">
       <div class="intro">A sentence is plenty to start. We read everything ourselves, and we'll reply to the address you leave.</div>
@@ -578,6 +583,39 @@ function go(id){
   window.scrollTo(0,0);
 }
 function toggleMenu(open){document.getElementById('mobmenu').classList.toggle('open',open);}
+
+/* ---- CUBE: dedicated multi-axis rotation ---- */
+/* Tunable per-object. Horizontal spins continuously; vertical eases up and back
+   so every face is revealed over the cycle. Only applies to .rl-cube (the logo
+   cube) — other GLBs like a plate can use plain auto-rotate for horizontal-only. */
+var CUBE={
+  yawSpeed:18,      /* degrees per second, horizontal — matches the speed you liked */
+  pitchMin:62,      /* highest tilt (smaller = looking down more) */
+  pitchMax:96,      /* lowest tilt (larger = looking up under it) */
+  pitchPeriod:11,   /* seconds for a full up-down-up vertical cycle */
+  radius:'105%'
+};
+(function(){
+  var cubes=[].slice.call(document.querySelectorAll('.rl-cube'));
+  if(!cubes.length) return;
+  var start=null;
+  function frame(t){
+    if(start===null) start=t;
+    var s=(t-start)/1000;
+    var yaw=(s*CUBE.yawSpeed)%360;
+    var mid=(CUBE.pitchMin+CUBE.pitchMax)/2;
+    var amp=(CUBE.pitchMax-CUBE.pitchMin)/2;
+    var pitch=mid+amp*Math.sin(2*Math.PI*s/CUBE.pitchPeriod);
+    var orbit=yaw.toFixed(2)+'deg '+pitch.toFixed(2)+'deg '+CUBE.radius;
+    for(var i=0;i<cubes.length;i++){
+      /* only animate cubes on a visible page to save cycles */
+      var pg=cubes[i].closest('.page');
+      if(pg && pg.classList.contains('active')) cubes[i].setAttribute('camera-orbit',orbit);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
 
 renderGrid();paintChips();
 </script>
