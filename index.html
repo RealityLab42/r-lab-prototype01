@@ -7,77 +7,72 @@
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 <style>
   :root{
-    --bg:#ffffff;
-    --ink:#1a1a1a;
-    --muted:#4a4a45;
-    --faint:#8a8a85;
-    --line:rgba(0,0,0,0.07);
-    --line-strong:rgba(0,0,0,0.12);
-    --teal:#00BFA5;
-    --coral:#F27969;
-    --navy:#2D466B;
-    --red:#C43328;
+    --bg:#ffffff; --ink:#1a1a1a; --muted:#4a4a45; --faint:#8a8a85;
+    --line:rgba(0,0,0,0.07); --line-strong:rgba(0,0,0,0.12);
+    --teal:#00BFA5; --coral:#F27969; --navy:#2D466B; --red:#C43328;
     --serif:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
     --sans:'Helvetica Neue',Helvetica,Arial,sans-serif;
+    --frame:1240px; --gut:40px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
   body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;}
   a{color:inherit;text-decoration:none;cursor:pointer;}
 
+  /* ============ THE FRAME ============ */
+  /* One reusable centered column. Every content block lives in a .wrap and
+     therefore shares one left edge. Full-bleed things use .bleed instead. */
+  .wrap{max-width:var(--frame);margin:0 auto;padding-left:var(--gut);padding-right:var(--gut);width:100%;}
+  .bleed{width:100%;}
+
+  .eyebrow{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--faint);display:inline-block;}
+  .btn-coral{display:inline-block;background:var(--coral);color:var(--ink);padding:16px 36px;font-size:13px;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;border:none;cursor:pointer;font-family:var(--sans);transition:transform .15s;}
+  .btn-coral:hover{transform:translateY(-1px);}
+
   /* ---- NAV ---- */
-  .nav{display:flex;justify-content:space-between;align-items:center;padding:24px max(40px,calc((100% - 1240px)/2 + 40px));border-bottom:0.5px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);z-index:100;}
+  .navbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);border-bottom:0.5px solid var(--line);}
+  .nav{display:flex;justify-content:space-between;align-items:center;padding-top:24px;padding-bottom:24px;}
   .brand{display:flex;align-items:center;gap:12px;}
   .brand svg{width:32px;height:22px;display:block;}
   .brand-word{font-family:var(--serif);font-size:21px;letter-spacing:-0.01em;}
   .navlinks{display:flex;gap:30px;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;}
   .navlinks a{padding-bottom:2px;border-bottom:1px solid transparent;transition:border-color .2s;}
-  .navlinks a:hover{border-bottom-color:var(--ink);}
-  .navlinks a.active{border-bottom-color:var(--ink);}
+  .navlinks a:hover,.navlinks a.active{border-bottom-color:var(--ink);}
   .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
-  .hamburger span{width:22px;height:1.5px;background:var(--ink);display:block;transition:transform .25s,opacity .2s;}
+  .hamburger span{width:22px;height:1.5px;background:var(--ink);display:block;}
 
   /* ---- PAGE SYSTEM ---- */
   .page{display:none;}
   .page.active{display:block;animation:fade .4s ease;}
   @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 
-  .eyebrow{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--faint);}
-  .foot{padding:28px 40px;border-top:0.5px solid var(--line);display:flex;justify-content:space-between;font-size:11px;color:var(--faint);}
+  /* ---- FOOTER ---- */
+  .foot-bar{border-top:0.5px solid var(--line);}
+  .foot{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);padding-top:28px;padding-bottom:28px;}
 
-  /* ---- GLOBAL WIDTH CAP ---- */
-  /* full-bleed blocks centered in a 1240 column */
-  .pagehead,.tagbar,.grid,.cs-video,.cs-quicklook,.credits,.prevnext,
-  .ab-cta,.ct-head,.ct-wrap,.ct-extra,.foot{max-width:1240px;margin-left:auto;margin-right:auto;width:100%;}
-  /* text-column blocks align their left edge to the same 40px inset as the centered frame */
-  .cs-title,.cs-block,.ab-lede,.ab-sec,.ab-quote,.jr-list{margin-left:max(0px,calc((100% - 1240px)/2));}
-
-  .btn-coral{display:inline-block;background:var(--coral);color:var(--ink);padding:16px 36px;font-size:13px;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;border:none;cursor:pointer;font-family:var(--sans);transition:transform .15s;}
-  .btn-coral:hover{transform:translateY(-1px);}
-  .link-ul{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:0.5px solid var(--ink);padding-bottom:3px;}
-
-  /* ---- HERO (home) ---- */
+  /* ---- HERO (home) — full bleed, self-managed ---- */
   .hero{position:relative;min-height:calc(100vh - 71px);overflow:hidden;}
-  /* centered frame keeps the composition intact at any width */
-  .hero-inner{position:relative;max-width:1240px;margin:0 auto;min-height:calc(100vh - 71px);padding:56px 40px 72px;}
+  .hero-inner{position:relative;max-width:var(--frame);margin:0 auto;min-height:calc(100vh - 71px);padding:56px var(--gut) 72px;}
   .hero-glb{position:absolute;top:40px;right:20px;width:min(42vw,500px);aspect-ratio:1/1;border:1px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:1;overflow:hidden;}
   .hero-glb model-viewer{width:88%;height:88%;background:transparent;--poster-color:transparent;}
-  .hero-eyebrow{position:absolute;top:60px;left:40px;z-index:3;}
-  .hero-h1{position:absolute;top:118px;left:40px;right:0;font-family:var(--serif);font-size:clamp(64px,8.2vw,116px);line-height:0.92;font-weight:400;letter-spacing:-0.03em;z-index:3;color:#fff;mix-blend-mode:difference;pointer-events:none;}
-  .hero-lower{position:absolute;bottom:80px;left:40px;z-index:3;max-width:520px;}
+  .hero-eyebrow{position:absolute;top:60px;left:var(--gut);z-index:3;}
+  .hero-h1{position:absolute;top:118px;left:var(--gut);right:0;font-family:var(--serif);font-size:clamp(64px,8.2vw,116px);line-height:0.92;font-weight:400;letter-spacing:-0.03em;z-index:3;color:#fff;mix-blend-mode:difference;pointer-events:none;}
+  .hero-lower{position:absolute;bottom:80px;left:var(--gut);z-index:3;max-width:520px;}
   .hero-lower p{font-size:14px;line-height:1.55;color:var(--muted);max-width:340px;margin-bottom:32px;}
-  .hero-scroll{position:absolute;bottom:32px;right:40px;z-index:3;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--faint);}
+  .hero-scroll{position:absolute;bottom:32px;right:var(--gut);z-index:3;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--faint);}
+
+  /* ---- PAGE HEAD (shared) ---- */
+  .phead{padding-top:56px;padding-bottom:32px;}
+  .phead h1{font-family:var(--serif);font-size:64px;line-height:0.95;font-weight:400;letter-spacing:-0.03em;margin-bottom:12px;}
+  .phead .sub{font-size:15px;line-height:1.6;color:var(--faint);max-width:440px;}
 
   /* ---- WORK INDEX ---- */
-  .pagehead{padding:56px 40px 32px;}
-  .pagehead h1{font-family:var(--serif);font-size:64px;line-height:0.95;font-weight:400;letter-spacing:-0.03em;margin-bottom:12px;}
-  .pagehead .sub{font-size:15px;line-height:1.6;color:var(--faint);max-width:440px;}
-  .tagbar{padding:0 40px 20px;display:flex;justify-content:space-between;align-items:flex-end;border-bottom:0.5px solid var(--line-strong);margin:0 40px 0 0;}
+  .tagbar{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:0.5px solid var(--line-strong);padding-bottom:20px;}
   .tagchips{display:flex;gap:10px;flex-wrap:wrap;}
   .chip{padding:9px 20px;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;border:1px solid rgba(0,0,0,0.2);color:var(--ink);cursor:pointer;transition:all .2s;user-select:none;}
   .chip.on{background:var(--ink);color:#fff;border-color:var(--ink);}
   .count{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--faint);white-space:nowrap;padding-bottom:4px;}
-  .grid{padding:36px 40px 64px;display:grid;grid-template-columns:repeat(3,1fr);gap:36px 24px;}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:36px 24px;padding-top:36px;padding-bottom:64px;}
   .card{cursor:pointer;}
   .card .thumb{aspect-ratio:4/5;margin-bottom:12px;transition:transform .3s;}
   .card:hover .thumb{transform:scale(0.985);}
@@ -85,66 +80,57 @@
   .card .cm{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--faint);}
 
   /* ---- CASE STUDY ---- */
-  .cs-title{padding:64px 40px 48px;max-width:760px;}
-  .cs-title .eyebrow{margin-bottom:20px;}
-  .cs-title h1{font-family:var(--serif);font-size:72px;line-height:0.95;font-weight:400;letter-spacing:-0.03em;margin-bottom:24px;}
+  /* all blocks live in .wrap, so left edges align. reading widths are inner caps. */
+  .cs-title{padding-top:64px;padding-bottom:48px;}
+  .cs-title h1{font-family:var(--serif);font-size:72px;line-height:0.95;font-weight:400;letter-spacing:-0.03em;margin:20px 0 24px;max-width:760px;}
   .cs-title .brief{font-family:var(--serif);font-size:21px;line-height:1.4;color:var(--muted);max-width:520px;}
-  .cs-block{padding:0 40px 64px;max-width:620px;}
-  .cs-block .eyebrow{margin-bottom:20px;display:block;}
-  .cs-block p{font-size:17px;line-height:1.65;}
-  .cs-solution{background:var(--ink);color:#fff;padding:52px 40px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
-  .cs-solution .eyebrow{color:var(--faint);margin-bottom:18px;}
-  .cs-solution h2{font-family:var(--serif);font-size:34px;line-height:1.1;font-weight:400;letter-spacing:-0.02em;margin-bottom:16px;}
-  .cs-solution p{font-size:13px;line-height:1.6;color:#b8b8b0;margin-bottom:28px;max-width:340px;}
-  .cs-solution .trigger{aspect-ratio:4/3;background:linear-gradient(135deg,#3a3a38,#242422);border:1px solid #3a3a38;display:flex;align-items:center;justify-content:center;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--faint);}
-  .btn-white{display:inline-block;background:#fff;color:var(--ink);padding:16px 34px;font-size:14px;letter-spacing:0.16em;text-transform:uppercase;font-weight:700;cursor:pointer;}
-  .cs-video{padding:64px 40px;display:grid;grid-template-columns:1fr 340px;gap:56px;align-items:center;max-width:1100px;}
+  .cs-block{padding-bottom:64px;}
+  .cs-block .eyebrow{margin-bottom:20px;}
+  .cs-block p{font-size:17px;line-height:1.65;max-width:620px;}
+  .cs-video{display:grid;grid-template-columns:1fr 340px;gap:56px;align-items:center;padding-bottom:64px;}
+  .cs-video .eyebrow{margin-bottom:20px;}
+  .cs-video p{font-size:17px;line-height:1.65;margin-bottom:16px;max-width:420px;}
+  .cs-video .cap{font-size:11px;line-height:1.6;color:var(--faint);}
   .cs-video .vid{aspect-ratio:9/16;background:linear-gradient(160deg,#e8e8e2,#c4c4bc);display:flex;align-items:center;justify-content:center;}
   .cs-video .play{width:56px;height:56px;border:1px solid rgba(0,0,0,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;}
-  .cs-video .eyebrow{margin-bottom:20px;display:block;}
-  .cs-video p{font-size:17px;line-height:1.65;margin-bottom:16px;}
-  .cs-video .cap{font-size:11px;line-height:1.6;color:var(--faint);}
-  .cs-quicklook{padding:64px 40px;display:grid;grid-template-columns:420px 1fr;gap:56px;align-items:center;}
-  .cs-quicklook .ql-model{position:relative;aspect-ratio:1/1;background:#fafaf8;border:1px solid #eee;display:flex;align-items:center;justify-content:center;}
-  .cs-quicklook .ql-model model-viewer{width:80%;height:80%;background:transparent;--poster-color:transparent;}
-  .cs-quicklook .ql-badge{position:absolute;bottom:14px;left:16px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);}
-  .cs-quicklook .ql-text{max-width:400px;}
-  .cs-quicklook .ql-text .eyebrow{display:block;margin-bottom:18px;}
-  .cs-quicklook .ql-text p{font-size:17px;line-height:1.65;margin-bottom:16px;}
-  .cs-quicklook .ql-text .cap{font-size:11px;line-height:1.6;color:var(--faint);}
-  .cs-g2{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
-  .cs-g2 .cell{aspect-ratio:1/1;background:#fff;border:1px solid #e5e5e0;display:flex;align-items:center;justify-content:center;position:relative;}
-  .cs-g2 .glblabel{position:absolute;bottom:14px;left:16px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);}
-  .cs-g2 .cap{padding:12px 16px 0;font-size:11px;line-height:1.6;color:var(--faint);}
-  .credits{padding:32px 40px 48px;border-top:0.5px solid var(--line);display:flex;gap:64px;font-size:11px;line-height:1.9;color:var(--muted);flex-wrap:wrap;}
+  /* Quick Look — cube centered with caption beneath, self-contained moment */
+  .cs-ql{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:24px;padding-bottom:72px;}
+  .cs-ql .ql-model{position:relative;width:min(70%,460px);aspect-ratio:1/1;border:1px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:28px;}
+  .cs-ql .ql-model model-viewer{width:82%;height:82%;background:transparent;--poster-color:transparent;}
+  .cs-ql .ql-badge{position:absolute;bottom:18px;left:0;right:0;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);}
+  .cs-ql .ql-text{max-width:440px;}
+  .cs-ql .ql-text .eyebrow{margin-bottom:14px;}
+  .cs-ql .ql-text p{font-size:17px;line-height:1.6;margin-bottom:12px;}
+  .cs-ql .ql-text .cap{font-size:11px;line-height:1.6;color:var(--faint);}
+  .credits{display:flex;gap:64px;font-size:11px;line-height:1.9;color:var(--muted);flex-wrap:wrap;border-top:0.5px solid var(--line);padding-top:32px;padding-bottom:48px;}
   .credits .k{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;}
-  .prevnext{border-top:0.5px solid var(--line);display:grid;grid-template-columns:1fr 1fr;}
-  .prevnext .pn{padding:36px 40px;cursor:pointer;}
-  .prevnext .pn:first-child{border-right:0.5px solid var(--line);}
+  .prevnext{display:grid;grid-template-columns:1fr 1fr;border-top:0.5px solid var(--line);}
+  .prevnext .pn{padding:36px 0;cursor:pointer;}
   .prevnext .pn.next{text-align:right;}
   .prevnext .k{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--faint);margin-bottom:10px;}
   .prevnext .t{font-family:var(--serif);font-size:22px;letter-spacing:-0.01em;}
 
   /* ---- ABOUT ---- */
-  .ab-lede{padding:88px 40px 0;max-width:640px;}
+  .ab-lede{padding-top:88px;}
+  .ab-lede .col{max-width:640px;}
   .ab-lede .big{font-family:var(--serif);font-size:26px;line-height:1.5;letter-spacing:-0.01em;margin-bottom:32px;}
   .ab-lede p{font-size:17px;line-height:1.7;margin-bottom:22px;}
   .ab-lede .sign{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--muted);margin-top:8px;}
-  .ab-sec{padding:56px 40px 0;display:grid;grid-template-columns:160px minmax(0,600px);gap:48px;max-width:900px;}
-  .ab-sec .k{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--faint);padding-top:6px;}
-  .ab-sec .body{max-width:560px;}
-  .ab-sec .body p{font-size:17px;line-height:1.7;margin-bottom:22px;}
-  .ab-sec .body p:last-child{margin-bottom:0;}
-  .ab-quote{margin:80px 40px;max-width:820px;}
-  .ab-quote .q{font-family:var(--serif);font-style:italic;font-size:30px;line-height:1.35;font-weight:400;letter-spacing:-0.01em;border-left:2px solid var(--coral);padding-left:32px;}
-  .ab-quote .q .yes{color:var(--teal);}
+  .ab-sec{padding-top:56px;}
+  .ab-sec .col{max-width:640px;}
+  .ab-sec .k{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--faint);margin-bottom:20px;}
+  .ab-sec .col p{font-size:17px;line-height:1.7;margin-bottom:22px;}
+  .ab-sec .col p:last-child{margin-bottom:0;}
+  .ab-quote{padding-top:80px;padding-bottom:24px;}
+  .ab-quote .q{font-family:var(--serif);font-style:italic;font-size:30px;line-height:1.35;font-weight:400;letter-spacing:-0.01em;border-left:2px solid var(--coral);padding-left:32px;max-width:760px;}
+  .ab-quote .q .yes{color:var(--teal);font-style:italic;}
   .ab-list{font-family:var(--serif);font-size:20px;line-height:1.75;}
   .ab-list.sub{color:var(--muted);}
-  .ab-cta{border-top:0.5px solid var(--line);padding:72px 40px;}
+  .ab-cta{border-top:0.5px solid var(--line);padding-top:72px;padding-bottom:72px;}
   .ab-cta h2{font-family:var(--serif);font-size:40px;line-height:1.15;font-weight:400;letter-spacing:-0.02em;margin-bottom:32px;max-width:520px;}
 
   /* ---- JOURNAL INDEX ---- */
-  .jr-list{padding:40px 40px 64px;max-width:820px;}
+  .jr-list{padding-top:40px;padding-bottom:64px;max-width:820px;}
   .jr-row{border-top:0.5px solid var(--line-strong);padding:34px 0;display:grid;grid-template-columns:110px 1fr;gap:40px;cursor:pointer;}
   .jr-row:last-child{border-bottom:0.5px solid var(--line-strong);}
   .jr-row .date{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--faint);padding-top:8px;}
@@ -153,29 +139,31 @@
   .jr-row .sf{font-family:var(--serif);font-style:italic;font-size:17px;line-height:1.55;color:var(--muted);max-width:540px;}
 
   /* ---- JOURNAL ARTICLE ---- */
-  .art-head{max-width:680px;margin:0 auto;padding:72px 40px 0;}
+  .art{max-width:680px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gut);}
+  .art-head{padding-top:72px;}
   .art-head .meta{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--faint);margin-bottom:24px;}
   .art-head h1{font-family:var(--serif);font-size:56px;line-height:1.02;font-weight:400;letter-spacing:-0.03em;margin-bottom:24px;}
   .art-head .sf{font-family:var(--serif);font-style:italic;font-size:22px;line-height:1.5;color:var(--muted);}
-  .art-body{max-width:680px;margin:0 auto;padding:48px 40px 0;}
+  .art-body{padding-top:48px;}
   .art-body p{font-size:18px;line-height:1.75;margin-bottom:24px;}
-  .art-quote{max-width:760px;margin:56px auto;padding:0 40px;}
+  .art-quote{padding:32px 0;}
   .art-quote .q{border-left:2px solid var(--coral);padding-left:32px;font-family:var(--serif);font-size:30px;line-height:1.3;font-weight:400;letter-spacing:-0.01em;}
-  .art-img{max-width:900px;margin:48px auto;padding:0 40px;}
+  .art-img{padding:16px 0;}
   .art-img .im{aspect-ratio:16/9;background:linear-gradient(135deg,#e8e8e2,#c4c4bc);}
   .art-img .cap{font-size:11px;line-height:1.6;color:var(--faint);padding-top:12px;max-width:520px;}
-  .art-share{max-width:680px;margin:56px auto 0;padding:48px 40px 40px;border-top:0.5px solid rgba(0,0,0,0.1);}
+  .art-share{padding:48px 0 40px;border-top:0.5px solid rgba(0,0,0,0.1);margin-top:56px;}
   .art-share .k{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--faint);margin-bottom:16px;}
   .art-share .row{display:flex;gap:20px;font-size:13px;}
   .art-share .row span{border-bottom:0.5px solid var(--ink);padding-bottom:2px;cursor:pointer;}
 
   /* ---- CONTACT ---- */
-  .ct-head{padding:64px 40px 0;position:relative;}
+  .ct-head{padding-top:64px;}
   .ct-head h1{font-family:var(--serif);font-size:74px;line-height:0.98;font-weight:400;letter-spacing:-0.03em;max-width:900px;color:#c8c8c0;}
-  .ct-wrap{position:relative;min-height:520px;padding:40px 40px 72px;overflow:hidden;}
-  .ct-glb{position:absolute;top:20px;right:20px;width:340px;height:340px;display:flex;align-items:center;justify-content:center;z-index:1;}
+  /* form + cube as a centered pair */
+  .ct-wrap{display:grid;grid-template-columns:420px 320px;gap:72px;justify-content:center;align-items:center;padding-top:40px;padding-bottom:72px;}
+  .ct-glb{width:320px;height:320px;display:flex;align-items:center;justify-content:center;}
   .ct-glb model-viewer{width:100%;height:100%;background:transparent;--poster-color:transparent;}
-  .ct-form{position:relative;z-index:3;max-width:420px;}
+  .ct-form{max-width:420px;}
   .ct-form .intro{font-size:15px;line-height:1.7;color:var(--muted);margin-bottom:40px;}
   .field{margin-bottom:24px;}
   .field .k{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;}
@@ -183,21 +171,27 @@
   .field input,.field textarea{width:100%;border:none;border-bottom:1px solid rgba(0,0,0,0.25);background:transparent;font-family:var(--sans);font-size:16px;padding:4px 0 8px;outline:none;transition:border-color .2s;}
   .field input:focus,.field textarea:focus{border-bottom-color:var(--ink);}
   .field textarea{resize:none;height:64px;}
-  .ct-extra{padding:44px 40px;border-top:0.5px solid var(--line);display:flex;gap:80px;}
+  .ct-extra{display:flex;gap:80px;border-top:0.5px solid var(--line);padding-top:44px;padding-bottom:44px;}
   .ct-extra .k{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--faint);margin-bottom:14px;}
   .ct-extra .v{font-size:14px;line-height:1.9;}
   .ct-extra .v.m{color:var(--muted);}
 
-  /* ---- RESPONSIVE ---- */
-  @media(max-width:760px){
-    .nav{padding:20px 24px;}
+  /* ---- MOBILE MENU ---- */
+  .mobmenu{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;flex-direction:column;padding:80px 40px;}
+  .mobmenu.open{display:flex;}
+  .mobmenu a{font-family:var(--serif);font-size:38px;padding:16px 0;border-bottom:0.5px solid var(--line);}
+  .mobmenu .close{position:absolute;top:24px;right:28px;font-size:30px;cursor:pointer;}
+
+  /* ============ RESPONSIVE ============ */
+  @media(max-width:820px){
+    :root{--gut:24px;}
     .navlinks{display:none;}
     .hamburger{display:flex;}
-    .foot{padding:24px;flex-direction:column;gap:4px;font-size:10px;line-height:1.8;}
+    .foot{flex-direction:column;gap:4px;font-size:10px;line-height:1.8;}
 
     .hero{min-height:auto;text-align:center;}
-    .hero-inner{padding:24px 24px 40px;min-height:auto;max-width:none;}
-    .hero-glb{position:absolute;top:80px;left:50%;transform:translateX(-50%);right:auto;width:min(120vw,470px);height:auto;}
+    .hero-inner{padding:24px var(--gut) 40px;min-height:auto;max-width:none;}
+    .hero-glb{position:absolute;top:80px;left:50%;transform:translateX(-50%);right:auto;width:min(120vw,470px);}
     .hero-eyebrow{position:relative;top:auto;left:auto;text-align:center;margin-bottom:28px;}
     .hero-h1{position:relative;top:auto;left:auto;font-size:54px;line-height:0.96;margin-bottom:340px;text-align:center;}
     .hero-lower{position:relative;bottom:auto;left:auto;max-width:none;text-align:center;}
@@ -205,81 +199,60 @@
     .hero-lower .btn-coral{width:100%;text-align:center;}
     .hero-scroll{position:relative;bottom:auto;right:auto;text-align:center;margin-top:36px;display:block;}
 
-    .pagehead{padding:32px 24px 0;}
-    .pagehead h1{font-size:46px;}
-    .tagbar{flex-direction:column;align-items:stretch;padding:0;margin:0;border:none;}
-    .tagchips{overflow-x:auto;flex-wrap:nowrap;padding:0 24px 16px;-webkit-overflow-scrolling:touch;}
+    .phead h1{font-size:46px;}
+    .tagbar{flex-direction:column;align-items:stretch;border:none;padding-bottom:0;}
+    .tagchips{overflow-x:auto;flex-wrap:nowrap;padding-bottom:16px;-webkit-overflow-scrolling:touch;margin-left:calc(-1*var(--gut));margin-right:calc(-1*var(--gut));padding-left:var(--gut);padding-right:var(--gut);}
     .chip{white-space:nowrap;}
-    .count{padding:0 24px 14px;border-bottom:0.5px solid var(--line-strong);}
-    .grid{grid-template-columns:1fr 1fr;gap:28px 16px;padding:28px 24px 48px;}
+    .count{padding-bottom:14px;border-bottom:0.5px solid var(--line-strong);}
+    .grid{grid-template-columns:1fr 1fr;gap:28px 16px;}
     .card .cn{font-size:16px;}
 
-    .cs-title{padding:36px 24px 32px;}
     .cs-title h1{font-size:46px;}
     .cs-title .brief{font-size:18px;}
-    .cs-block{padding:0 24px 40px;}
     .cs-block p{font-size:16px;}
-    .cs-solution{grid-template-columns:1fr;padding:40px 24px;gap:24px;}
-    .cs-solution .order-text{order:1;}
-    .cs-solution .order-trigger{order:2;}
-    .cs-solution .btn-white{width:100%;text-align:center;box-sizing:border-box;}
-    .cs-video{grid-template-columns:1fr;padding:40px 0;gap:0;}
-    .cs-video .textcol{padding:0 24px;order:1;}
-    .cs-video .vid{order:2;margin-top:24px;}
+    .cs-video{grid-template-columns:1fr;gap:24px;}
+    .cs-video .media{order:2;}
+    .cs-video .textcol{order:1;}
     .cs-video p{font-size:16px;}
-    .cs-quicklook{grid-template-columns:1fr;padding:40px 24px;gap:24px;}
-    .cs-quicklook .ql-text{max-width:none;}
-    .cs-quicklook .ql-text p{font-size:16px;}
-    .credits{padding:28px 24px;gap:24px 48px;}
+    .cs-ql .ql-model{width:min(88%,380px);}
+    .cs-ql .ql-text p{font-size:16px;}
+    .credits{gap:24px 48px;}
     .prevnext{grid-template-columns:1fr;}
-    .prevnext .pn{border-right:none!important;border-bottom:0.5px solid var(--line);text-align:left!important;}
+    .prevnext .pn{border-bottom:0.5px solid var(--line);text-align:left!important;}
 
-    .ab-lede{padding:48px 24px 0;}
+    .ab-lede{padding-top:48px;}
     .ab-lede .big{font-size:23px;}
     .ab-lede p{font-size:16px;}
-    .ab-sec{grid-template-columns:1fr;gap:18px;padding:44px 24px 0;}
-    .ab-sec .body p{font-size:16px;}
-    .ab-quote{margin:56px 24px;}
+    .ab-sec .col p{font-size:16px;}
+    .ab-quote{padding-top:56px;}
     .ab-quote .q{font-size:24px;padding-left:22px;}
-    .ab-cta{padding:48px 24px;}
+    .ab-cta{padding-top:48px;padding-bottom:48px;}
     .ab-cta h2{font-size:30px;}
     .ab-cta .btn-coral{width:100%;text-align:center;}
 
-    .jr-list{padding:0 24px 48px;}
     .jr-row{grid-template-columns:1fr;gap:8px;padding:28px 0;}
     .jr-row .t{font-size:26px;}
 
-    .art-head{padding:44px 24px 0;}
     .art-head h1{font-size:40px;}
     .art-head .sf{font-size:18px;}
-    .art-body{padding:36px 24px 0;}
     .art-body p{font-size:17px;}
-    .art-quote{padding:0 24px;margin:32px auto;}
     .art-quote .q{font-size:26px;padding-left:22px;}
-    .art-img{padding:0;margin:32px auto;}
     .art-img .im{aspect-ratio:4/3;}
-    .art-img .cap{padding:12px 24px 0;}
-    .art-share{padding:40px 24px 36px;margin:36px auto 0;}
 
-    .ct-head{padding:36px 24px 0;}
     .ct-head h1{font-size:44px;}
-    .ct-wrap{padding:24px 24px 40px;}
-    .ct-glb{width:220px;height:220px;top:10px;right:-30px;}
+    .ct-wrap{grid-template-columns:1fr;gap:0;}
+    .ct-glb{width:220px;height:220px;margin:0 auto 20px;order:-1;}
+    .ct-form{max-width:none;}
     .ct-form .btn-coral{width:100%;text-align:center;}
-    .ct-extra{padding:8px 24px 40px;gap:56px;}
+    .ct-extra{gap:56px;}
   }
-
-  /* mobile menu overlay */
-  .mobmenu{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;flex-direction:column;padding:80px 40px;}
-  .mobmenu.open{display:flex;}
-  .mobmenu a{font-family:var(--serif);font-size:38px;padding:16px 0;border-bottom:0.5px solid var(--line);}
-  .mobmenu .close{position:absolute;top:24px;right:28px;font-size:30px;cursor:pointer;}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<div class="nav">
+<div class="navbar">
+ <div class="wrap nav">
   <a class="brand" onclick="go('home')">
     <svg viewBox="0 0 1300 900" xmlns="http://www.w3.org/2000/svg">
       <path d="M172.37,138.39v141.68h140.11c72.99,0,167.91-24.59,175.36-141.68H172.37Z" fill="#F27969"/>
@@ -295,6 +268,7 @@
     <a data-nav="contact" onclick="go('contact')">Contact</a>
   </div>
   <div class="hamburger" onclick="toggleMenu(true)"><span></span><span></span></div>
+ </div>
 </div>
 
 <div class="mobmenu" id="mobmenu">
@@ -307,7 +281,7 @@
 
 <!-- ============ HOME ============ -->
 <div class="page active" id="page-home">
-  <div class="hero">
+  <div class="hero bleed">
    <div class="hero-inner">
     <div class="hero-glb">
       <model-viewer id="cube-hero" class="rl-cube" src="R_LabLogoCube2.glb" interaction-prompt="none" disable-zoom camera-controls touch-action="pan-y" shadow-intensity="0"></model-viewer>
@@ -325,10 +299,8 @@
 
 <!-- ============ WORK ============ -->
 <div class="page" id="page-work">
-  <div class="pagehead">
-    <h1>Work</h1>
-  </div>
-  <div class="tagbar">
+  <div class="wrap phead"><h1>Work</h1></div>
+  <div class="wrap tagbar">
     <div class="tagchips" id="chips">
       <span class="chip on" data-tag="all">All</span>
       <span class="chip" data-tag="visualize">Visualize</span>
@@ -339,30 +311,30 @@
     </div>
     <div class="count" id="count">15 projects</div>
   </div>
-  <div class="grid" id="workgrid"></div>
-  <div class="foot"><div>We're Virtually Everywhere · Often Seen in Boston &amp; Paris</div><div>&copy; Reality Lab 2026</div></div>
+  <div class="wrap grid" id="workgrid"></div>
+  <div class="foot-bar"><div class="wrap foot"><div>We're Virtually Everywhere · Often Seen in Boston &amp; Paris</div><div>&copy; Reality Lab 2026</div></div></div>
 </div>
 
 <!-- ============ CASE STUDY ============ -->
 <div class="page" id="page-case">
-  <div class="cs-title">
+  <div class="wrap cs-title">
     <div class="eyebrow">Restaurant · 2026</div>
     <h1>AR menus that sell themselves.</h1>
     <div class="brief">An augmented menu for [Client], where every dish appears on the table before it's ordered.</div>
   </div>
-  <div class="cs-block">
+  <div class="wrap cs-block">
     <span class="eyebrow">The problem</span>
     <p>Photographs flatten food. Descriptions oversell it. Diners order blind and restaurants absorb the disappointment — in sent-back plates, in reviews, in the dishes nobody ever tries.</p>
   </div>
-  <div class="cs-video">
+  <div class="wrap cs-video">
     <div class="textcol">
       <span class="eyebrow">In use</span>
       <p>Fourteen dishes, photogrammetrically captured and rebuilt as three-dimensional models diners can see at actual scale on their own table.</p>
       <div class="cap">Filmed at [Location].</div>
     </div>
-    <div class="vid"><div class="play">&#9654;</div></div>
+    <div class="media vid"><div class="play">&#9654;</div></div>
   </div>
-  <div class="cs-quicklook">
+  <div class="wrap cs-ql">
     <div class="ql-model">
       <model-viewer id="cube-case" class="rl-cube" src="R_LabLogoCube2.glb" interaction-prompt="none" disable-zoom camera-controls touch-action="pan-y" shadow-intensity="0"></model-viewer>
       <div class="ql-badge">Placeholder · the dish model</div>
@@ -373,85 +345,79 @@
       <div class="cap">Braised short rib — one of fourteen dishes captured for the menu.</div>
     </div>
   </div>
-  <div class="cs-block" style="padding-top:8px;">
+  <div class="wrap cs-block">
     <span class="eyebrow">The outcome</span>
     <p>The menu became the most-photographed object in the room. Servers stopped describing dishes and started handing over the phone.</p>
   </div>
-  <div class="credits">
+  <div class="wrap credits">
     <div><div class="k">Client</div><div>[Client Name]</div></div>
     <div><div class="k">Year</div><div>2026</div></div>
     <div><div class="k">Scope</div><div>Strategy · 3D capture · Build</div></div>
   </div>
-  <div class="prevnext">
+  <div class="wrap prevnext">
     <div class="pn" onclick="go('case')"><div class="k">&larr; Previous</div><div class="t">Sea level rise</div></div>
     <div class="pn next" onclick="go('case')"><div class="k">Next &rarr;</div><div class="t">Dave &amp; Buster's</div></div>
   </div>
-  <div class="foot"><div>We're Virtually Everywhere · Often Seen in Boston &amp; Paris</div><div>&copy; Reality Lab 2026</div></div>
+  <div class="foot-bar"><div class="wrap foot"><div>We're Virtually Everywhere · Often Seen in Boston &amp; Paris</div><div>&copy; Reality Lab 2026</div></div></div>
 </div>
 
 <!-- ============ ABOUT ============ -->
 <div class="page" id="page-about">
-  <div class="ab-lede">
+  <div class="wrap ab-lede">
+   <div class="col">
     <div class="big">I began my creative life as a writer, and I still think like one.</div>
     <p>I've also always been an avid science fiction reader — which means I've always been interested in technology, and specifically in how technology changes the way we tell a story.</p>
     <p>Gutenberg's moveable type made the novel possible. That's the pattern I keep coming back to: a new technology arrives, and it doesn't just carry old stories more efficiently. It makes new kinds of stories possible.</p>
     <p>So I've spent thirty-five years arriving early. Early CD-ROM. Early web — Wheeler Design Group was one of the first all-digital design firms in Boston. Online magazines and stores before that was a category. A news marketplace built to connect readers directly to journalists. And now augmented reality, which is the most interesting storytelling technology to arrive in my working life.</p>
     <div class="sign">— J. Michael Wheeler</div>
+   </div>
   </div>
 
-  <div class="ab-sec">
+  <div class="wrap ab-sec"><div class="col">
     <div class="k">Reality Lab®</div>
-    <div class="body">
-      <p>In January 2020 we pivoted Wheeler Design Group into Reality Lab, and pointed twenty-five years of strategy and design straight at augmented reality.</p>
-      <p>We conceive, design, and deploy AR experiences for business, art, and communication. Menus that let diners see the dish. Exhibitions that put the invisible in the room. Environmental work that shows people a future they'd otherwise have to imagine.</p>
-    </div>
-  </div>
+    <p>In January 2020 we pivoted Wheeler Design Group into Reality Lab, and pointed twenty-five years of strategy and design straight at augmented reality.</p>
+    <p>We conceive, design, and deploy AR experiences for business, art, and communication. Menus that let diners see the dish. Exhibitions that put the invisible in the room. Environmental work that shows people a future they'd otherwise have to imagine.</p>
+  </div></div>
 
-  <div class="ab-sec">
+  <div class="wrap ab-sec"><div class="col">
     <div class="k">How we work</div>
-    <div class="body">
-      <p>I've always used what I call the Movie Studio Model. I don't keep a staff of specialists — I assemble a team for each project, built around what that project actually needs.</p>
-      <p>The reason is simple. If I employed a videographer, I'd have to sell video, whether or not video was the right answer. Instead I hire the solution. That's how we can look at any problem and give you an honest opinion about whether AR is the right tool — and if it is, what kind.</p>
-    </div>
-  </div>
+    <p>I've always used what I call the Movie Studio Model. I don't keep a staff of specialists — I assemble a team for each project, built around what that project actually needs.</p>
+    <p>The reason is simple. If I employed a videographer, I'd have to sell video, whether or not video was the right answer. Instead I hire the solution. That's how we can look at any problem and give you an honest opinion about whether AR is the right tool — and if it is, what kind.</p>
+  </div></div>
 
-  <div class="ab-quote">
+  <div class="wrap ab-quote">
     <div class="q">Can you do ______ with AR? <span style="color:var(--faint);font-weight:300;">—</span> <span class="yes">Yes.</span></div>
   </div>
 
-  <div class="ab-sec">
+  <div class="wrap ab-sec"><div class="col">
     <div class="k">Boston &amp; Paris</div>
-    <div class="body">
-      <p>From 1994 to 1998 I ran Wheeler Design Paris, working with Saatchi &amp; Saatchi, Virgin Interactive, Grey Entertainment, FCB, ODA, and Abacus Research. While I was there, Parsons School of Art &amp; Design Paris asked me to develop and teach their first multimedia course.</p>
-      <p>The Paris connection never really ended.</p>
-    </div>
-  </div>
+    <p>From 1994 to 1998 I ran Wheeler Design Paris, working with Saatchi &amp; Saatchi, Virgin Interactive, Grey Entertainment, FCB, ODA, and Abacus Research. While I was there, Parsons School of Art &amp; Design Paris asked me to develop and teach their first multimedia course.</p>
+    <p>The Paris connection never really ended.</p>
+  </div></div>
 
-  <div class="ab-sec" style="padding-bottom:72px;">
+  <div class="wrap ab-sec" style="padding-bottom:8px;"><div class="col">
     <div class="k">In good company</div>
-    <div class="body">
-      <div class="ab-list" style="margin-bottom:28px;">Dave &amp; Buster's · [Client] · [Client] · [Client]</div>
-      <div class="k" style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--faint);margin-bottom:12px;">Previously, at Wheeler Design Group</div>
-      <div class="ab-list sub" style="margin-bottom:28px;">Merck · IBM · Saatchi &amp; Saatchi · Virgin Interactive Entertainment · Grey Advertising · AGFA · Siemens Nixdorf</div>
-      <div class="k" style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--faint);margin-bottom:12px;">Self-initiated</div>
-      <div class="ab-list sub">Sea Level Rise · Data Landscape · Sculpture Garden</div>
-    </div>
-  </div>
+    <div class="ab-list" style="margin-bottom:28px;">Dave &amp; Buster's · [Client] · [Client] · [Client]</div>
+    <div class="k" style="margin-bottom:12px;">Previously, at Wheeler Design Group</div>
+    <div class="ab-list sub" style="margin-bottom:28px;">Merck · IBM · Saatchi &amp; Saatchi · Virgin Interactive Entertainment · Grey Advertising · AGFA · Siemens Nixdorf</div>
+    <div class="k" style="margin-bottom:12px;">Self-initiated</div>
+    <div class="ab-list sub">Sea Level Rise · Data Landscape · Sculpture Garden</div>
+  </div></div>
 
-  <div class="ab-cta">
+  <div class="wrap ab-cta">
     <h2>Tell us what you'd like to put in the world.</h2>
     <a class="btn-coral" onclick="go('contact')">Get in touch&nbsp;&nbsp;&rarr;</a>
   </div>
-  <div class="foot"><div>We're Virtually Everywhere · Often Seen in Boston &amp; Paris</div><div>&copy; Reality Lab 2026</div></div>
+  <div class="foot-bar"><div class="wrap foot"><div>We're Virtually Everywhere · Often Seen in Boston &amp; Paris</div><div>&copy; Reality Lab 2026</div></div></div>
 </div>
 
 <!-- ============ JOURNAL INDEX ============ -->
 <div class="page" id="page-journal">
-  <div class="pagehead">
+  <div class="wrap phead">
     <h1>Journal</h1>
     <div class="sub">Notes on augmented reality, storytelling, and the technologies that change how we tell it.</div>
   </div>
-  <div class="jr-list">
+  <div class="wrap jr-list">
     <div class="jr-row" onclick="go('article')">
       <div class="date">Jul 2026</div>
       <div><div class="t">AR Ain't Video</div><div class="sf">Everyone who commissions their first AR piece asks for a storyboard. Here's why that's the wrong instinct — and what to ask for instead.</div></div>
@@ -469,53 +435,50 @@
       <div><div class="t">We made an AR business card for ourselves</div><div class="sf">Reality Lab as its own client. What we learned building the thing we keep telling everyone else to build.</div></div>
     </div>
   </div>
-  <div class="foot"><div>We're Virtually Everywhere · Often Seen in Boston &amp; Paris</div><div>&copy; Reality Lab 2026</div></div>
+  <div class="foot-bar"><div class="wrap foot"><div>We're Virtually Everywhere · Often Seen in Boston &amp; Paris</div><div>&copy; Reality Lab 2026</div></div></div>
 </div>
 
 <!-- ============ JOURNAL ARTICLE ============ -->
 <div class="page" id="page-article">
-  <div class="art-head">
+  <div class="art art-head">
     <div class="meta">Jul 2026 · J. Michael Wheeler</div>
     <h1>AR Ain't Video</h1>
     <div class="sf">Everyone who commissions their first AR piece asks for a storyboard. Here's why that's the wrong instinct — and what to ask for instead.</div>
   </div>
-  <div class="art-body">
+  <div class="art art-body">
     <p>The first thing a new client hands me is almost always a storyboard. Frames, arrows, a beginning and an end. It's what you make when you've spent your career thinking in video, and it's the single clearest sign that we haven't started the real conversation yet.</p>
     <p>Video is a river. It runs one direction, at one speed, and every viewer stands in the same spot. You control the frame because you control everything — where the eye goes, when the cut lands, how long the moment lasts. That control is the whole art form.</p>
   </div>
-  <div class="art-quote">
+  <div class="art art-quote">
     <div class="q">AR isn't a river. It's a room. You don't control where the viewer stands — you decide what's worth walking toward.</div>
   </div>
-  <div class="art-body">
+  <div class="art art-body">
     <p>Once you accept that, the storyboard stops being useful and starts being a cage. The right question isn't "what happens first, then next." It's "what does someone find when they look here, and what pulls them to look there."</p>
   </div>
-  <div class="art-img">
+  <div class="art art-img">
     <div class="im"></div>
     <div class="cap">A storyboard frame beside a spatial map of the same piece. One is a sequence; the other is a place.</div>
   </div>
-  <div class="art-body">
+  <div class="art art-body">
     <p>This is why our first deliverable is rarely a script. It's a space — blocked out, walkable, empty of content but full of intent. The story comes after we know the room.</p>
   </div>
-  <div class="art-share">
+  <div class="art art-share">
     <div class="k">Share</div>
     <div class="row"><span>LinkedIn</span><span>Copy link</span></div>
   </div>
-  <div class="prevnext">
+  <div class="wrap prevnext">
     <div class="pn" onclick="go('article')"><div class="k">&larr; Previous</div><div class="t">Why AR menus beat QR menus</div></div>
     <div class="pn next" onclick="go('article')"><div class="k">Next &rarr;</div><div class="t">AR is a New Media</div></div>
   </div>
-  <div class="foot"><div>We're Virtually Everywhere · Often Seen in Boston &amp; Paris</div><div>&copy; Reality Lab 2026</div></div>
+  <div class="foot-bar"><div class="wrap foot"><div>We're Virtually Everywhere · Often Seen in Boston &amp; Paris</div><div>&copy; Reality Lab 2026</div></div></div>
 </div>
 
 <!-- ============ CONTACT ============ -->
 <div class="page" id="page-contact">
-  <div class="ct-head">
+  <div class="wrap ct-head">
     <h1>[ Headline — TBD ]</h1>
   </div>
-  <div class="ct-wrap">
-    <div class="ct-glb">
-      <model-viewer id="cube-contact" class="rl-cube" src="R_LabLogoCube2.glb" interaction-prompt="none" disable-zoom camera-controls touch-action="pan-y" shadow-intensity="0"></model-viewer>
-    </div>
+  <div class="wrap ct-wrap">
     <div class="ct-form">
       <div class="intro">A sentence is plenty to start. We read everything ourselves, and we'll reply to the address you leave.</div>
       <div class="field"><div class="k">Name</div><input type="text"></div>
@@ -523,12 +486,15 @@
       <div class="field"><div class="k">What are you thinking about?</div><textarea></textarea></div>
       <a class="btn-coral">Send&nbsp;&nbsp;&rarr;</a>
     </div>
+    <div class="ct-glb">
+      <model-viewer id="cube-contact" class="rl-cube" src="R_LabLogoCube2.glb" interaction-prompt="none" disable-zoom camera-controls touch-action="pan-y" shadow-intensity="0"></model-viewer>
+    </div>
   </div>
-  <div class="ct-extra">
+  <div class="wrap ct-extra">
     <div><div class="k">Elsewhere</div><div class="v">LinkedIn<br>Instagram</div></div>
     <div><div class="k">Studios</div><div class="v m">Boston<br>Paris</div></div>
   </div>
-  <div class="foot"><div>We're Virtually Everywhere · Often Seen in Boston &amp; Paris</div><div>&copy; Reality Lab 2026</div></div>
+  <div class="foot-bar"><div class="wrap foot"><div>We're Virtually Everywhere · Often Seen in Boston &amp; Paris</div><div>&copy; Reality Lab 2026</div></div></div>
 </div>
 
 <script>
@@ -593,15 +559,8 @@ function go(id){
 }
 function toggleMenu(open){document.getElementById('mobmenu').classList.toggle('open',open);}
 
-/* ---- CUBE: dedicated multi-axis rotation ---- */
-/* Tunable per-object. Horizontal spins continuously; vertical eases up and back
-   so every face is revealed over the cycle. Only applies to .rl-cube (the logo
-   cube) — other GLBs like a plate can use plain auto-rotate for horizontal-only. */
-var CUBE={
-  yawSpeed:18,      /* degrees per second, horizontal spin */
-  pitchSpeed:12,    /* degrees per second, continuous vertical roll (0 = no vertical) */
-  radius:'105%'
-};
+/* ---- CUBE: continuous multi-axis rotation, its own settings ---- */
+var CUBE={ yawSpeed:18, pitchSpeed:12, radius:'105%' };
 (function(){
   var cubes=[].slice.call(document.querySelectorAll('.rl-cube'));
   if(!cubes.length) return;
@@ -609,9 +568,7 @@ var CUBE={
   function frame(t){
     if(start===null) start=t;
     var s=(t-start)/1000;
-    var yaw=s*CUBE.yawSpeed;
-    var pitch=s*CUBE.pitchSpeed;
-    var orbit=yaw.toFixed(2)+'deg '+pitch.toFixed(2)+'deg '+CUBE.radius;
+    var orbit=(s*CUBE.yawSpeed).toFixed(2)+'deg '+(s*CUBE.pitchSpeed).toFixed(2)+'deg '+CUBE.radius;
     for(var i=0;i<cubes.length;i++){
       var pg=cubes[i].closest('.page');
       if(pg && pg.classList.contains('active')) cubes[i].setAttribute('camera-orbit',orbit);
