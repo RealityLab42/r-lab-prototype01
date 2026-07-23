@@ -80,10 +80,17 @@
   .card .cm{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--faint);}
 
   /* ---- CASE STUDY ---- */
-  /* all blocks live in .wrap, so left edges align. reading widths are inner caps. */
-  .cs-title{padding-top:64px;padding-bottom:48px;}
-  .cs-title h1{font-family:var(--serif);font-size:72px;line-height:0.95;font-weight:400;letter-spacing:-0.03em;margin:20px 0 24px;max-width:760px;}
-  .cs-title .brief{font-family:var(--serif);font-size:21px;line-height:1.4;color:var(--muted);max-width:520px;}
+  /* case study top: title left, Quick Look cube right (hero-style split) */
+  .cs-top{display:grid;grid-template-columns:1fr 460px;gap:64px;align-items:start;padding-top:64px;padding-bottom:56px;}
+  .cs-top-text h1{font-family:var(--serif);font-size:64px;line-height:0.95;font-weight:400;letter-spacing:-0.03em;margin:20px 0 24px;}
+  .cs-top-text .brief{font-family:var(--serif);font-size:21px;line-height:1.4;color:var(--muted);max-width:440px;}
+  .cs-top-ql{display:flex;flex-direction:column;align-items:center;text-align:center;}
+  .cs-top-ql .ql-model{position:relative;width:100%;max-width:460px;aspect-ratio:1/1;border:1px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:24px;}
+  .cs-top-ql .ql-model model-viewer{width:82%;height:82%;background:transparent;--poster-color:transparent;}
+  .cs-top-ql .ql-text{max-width:380px;}
+  .cs-top-ql .ql-text .eyebrow{margin-bottom:12px;}
+  .cs-top-ql .ql-text p{font-size:15px;line-height:1.6;margin-bottom:10px;}
+  .cs-top-ql .ql-text .cap{font-size:11px;line-height:1.6;color:var(--faint);}
   .cs-block{padding-bottom:64px;}
   .cs-block .eyebrow{margin-bottom:20px;}
   .cs-block p{font-size:17px;line-height:1.65;max-width:620px;}
@@ -93,15 +100,6 @@
   .cs-video .cap{font-size:11px;line-height:1.6;color:var(--faint);}
   .cs-video .vid{aspect-ratio:9/16;background:linear-gradient(160deg,#e8e8e2,#c4c4bc);display:flex;align-items:center;justify-content:center;}
   .cs-video .play{width:56px;height:56px;border:1px solid rgba(0,0,0,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;}
-  /* Quick Look — cube centered with caption beneath, self-contained moment */
-  .cs-ql{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:24px;padding-bottom:72px;}
-  .cs-ql .ql-model{position:relative;width:min(70%,460px);aspect-ratio:1/1;border:1px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:28px;}
-  .cs-ql .ql-model model-viewer{width:82%;height:82%;background:transparent;--poster-color:transparent;}
-  .cs-ql .ql-badge{position:absolute;bottom:18px;left:0;right:0;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);}
-  .cs-ql .ql-text{max-width:440px;}
-  .cs-ql .ql-text .eyebrow{margin-bottom:14px;}
-  .cs-ql .ql-text p{font-size:17px;line-height:1.6;margin-bottom:12px;}
-  .cs-ql .ql-text .cap{font-size:11px;line-height:1.6;color:var(--faint);}
   .credits{display:flex;gap:64px;font-size:11px;line-height:1.9;color:var(--muted);flex-wrap:wrap;border-top:0.5px solid var(--line);padding-top:32px;padding-bottom:48px;}
   .credits .k{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;}
   .prevnext{display:grid;grid-template-columns:1fr 1fr;border-top:0.5px solid var(--line);}
@@ -160,7 +158,7 @@
   .ct-head{padding-top:64px;}
   .ct-head h1{font-family:var(--serif);font-size:74px;line-height:0.98;font-weight:400;letter-spacing:-0.03em;max-width:900px;color:#c8c8c0;}
   /* form + cube as a centered pair */
-  .ct-wrap{display:grid;grid-template-columns:420px 320px;gap:72px;justify-content:center;align-items:center;padding-top:40px;padding-bottom:72px;}
+  .ct-wrap{display:grid;grid-template-columns:420px 320px;gap:72px;justify-content:start;align-items:center;padding-top:40px;padding-bottom:72px;}
   .ct-glb{width:320px;height:320px;display:flex;align-items:center;justify-content:center;}
   .ct-glb model-viewer{width:100%;height:100%;background:transparent;--poster-color:transparent;}
   .ct-form{max-width:420px;}
@@ -207,15 +205,15 @@
     .grid{grid-template-columns:1fr 1fr;gap:28px 16px;}
     .card .cn{font-size:16px;}
 
-    .cs-title h1{font-size:46px;}
-    .cs-title .brief{font-size:18px;}
+    .cs-top{grid-template-columns:1fr;gap:36px;}
+    .cs-top-text h1{font-size:46px;}
+    .cs-top-text .brief{font-size:18px;}
+    .cs-top-ql .ql-model{max-width:380px;margin-left:auto;margin-right:auto;}
     .cs-block p{font-size:16px;}
     .cs-video{grid-template-columns:1fr;gap:24px;}
     .cs-video .media{order:2;}
     .cs-video .textcol{order:1;}
     .cs-video p{font-size:16px;}
-    .cs-ql .ql-model{width:min(88%,380px);}
-    .cs-ql .ql-text p{font-size:16px;}
     .credits{gap:24px 48px;}
     .prevnext{grid-template-columns:1fr;}
     .prevnext .pn{border-bottom:0.5px solid var(--line);text-align:left!important;}
@@ -317,10 +315,22 @@
 
 <!-- ============ CASE STUDY ============ -->
 <div class="page" id="page-case">
-  <div class="wrap cs-title">
-    <div class="eyebrow">Restaurant · 2026</div>
-    <h1>AR menus that sell themselves.</h1>
-    <div class="brief">An augmented menu for [Client], where every dish appears on the table before it's ordered.</div>
+  <div class="wrap cs-top">
+    <div class="cs-top-text">
+      <div class="eyebrow">Restaurant · 2026</div>
+      <h1>AR menus that sell themselves.</h1>
+      <div class="brief">An augmented menu for [Client], where every dish appears on the table before it's ordered.</div>
+    </div>
+    <div class="cs-top-ql">
+      <div class="ql-model">
+        <model-viewer id="cube-case" class="rl-cube" src="R_LabLogoCube2.glb" interaction-prompt="none" disable-zoom camera-controls touch-action="pan-y" shadow-intensity="0"></model-viewer>
+      </div>
+      <div class="ql-text">
+        <span class="eyebrow">See it in your space</span>
+        <p>Drag to turn the dish. On a phone, tap to place it on your table at full size.</p>
+        <div class="cap">Braised short rib — one of fourteen dishes captured for the menu.</div>
+      </div>
+    </div>
   </div>
   <div class="wrap cs-block">
     <span class="eyebrow">The problem</span>
@@ -333,17 +343,6 @@
       <div class="cap">Filmed at [Location].</div>
     </div>
     <div class="media vid"><div class="play">&#9654;</div></div>
-  </div>
-  <div class="wrap cs-ql">
-    <div class="ql-model">
-      <model-viewer id="cube-case" class="rl-cube" src="R_LabLogoCube2.glb" interaction-prompt="none" disable-zoom camera-controls touch-action="pan-y" shadow-intensity="0"></model-viewer>
-      <div class="ql-badge">Placeholder · the dish model</div>
-    </div>
-    <div class="ql-text">
-      <span class="eyebrow">See it in your space</span>
-      <p>Drag to turn the dish. On a phone, tap to place it on your table at full size.</p>
-      <div class="cap">Braised short rib — one of fourteen dishes captured for the menu.</div>
-    </div>
   </div>
   <div class="wrap cs-block">
     <span class="eyebrow">The outcome</span>
@@ -413,7 +412,7 @@
 
 <!-- ============ JOURNAL INDEX ============ -->
 <div class="page" id="page-journal">
-  <div class="wrap phead">
+  <div class="wrap phead jr-head">
     <h1>Journal</h1>
     <div class="sub">Notes on augmented reality, storytelling, and the technologies that change how we tell it.</div>
   </div>
