@@ -56,7 +56,7 @@
   .hero-glb{position:absolute;top:40px;right:-20px;width:min(46vw,560px);aspect-ratio:1/1;border:1px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:1;overflow:hidden;}
   .hero-glb model-viewer{width:88%;height:88%;background:transparent;--poster-color:transparent;}
   .hero-eyebrow{position:absolute;top:60px;left:40px;z-index:3;}
-  .hero-h1{position:absolute;top:118px;left:40px;font-family:var(--serif);font-size:clamp(64px,8.2vw,116px);line-height:0.92;font-weight:400;letter-spacing:-0.03em;z-index:3;color:#fff;mix-blend-mode:difference;}
+  .hero-h1{position:absolute;top:118px;left:40px;right:0;font-family:var(--serif);font-size:clamp(64px,8.2vw,116px);line-height:0.92;font-weight:400;letter-spacing:-0.03em;z-index:3;color:#fff;mix-blend-mode:difference;pointer-events:none;}
   .hero-lower{position:absolute;bottom:80px;left:40px;z-index:3;max-width:520px;}
   .hero-lower p{font-size:14px;line-height:1.55;color:var(--muted);max-width:340px;margin-bottom:32px;}
   .hero-scroll{position:absolute;bottom:32px;right:40px;z-index:3;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--faint);}
@@ -589,10 +589,8 @@ function toggleMenu(open){document.getElementById('mobmenu').classList.toggle('o
    so every face is revealed over the cycle. Only applies to .rl-cube (the logo
    cube) — other GLBs like a plate can use plain auto-rotate for horizontal-only. */
 var CUBE={
-  yawSpeed:18,      /* degrees per second, horizontal — matches the speed you liked */
-  pitchMin:62,      /* highest tilt (smaller = looking down more) */
-  pitchMax:96,      /* lowest tilt (larger = looking up under it) */
-  pitchPeriod:11,   /* seconds for a full up-down-up vertical cycle */
+  yawSpeed:18,      /* degrees per second, horizontal spin */
+  pitchSpeed:12,    /* degrees per second, continuous vertical roll (0 = no vertical) */
   radius:'105%'
 };
 (function(){
@@ -603,12 +601,9 @@ var CUBE={
     if(start===null) start=t;
     var s=(t-start)/1000;
     var yaw=(s*CUBE.yawSpeed)%360;
-    var mid=(CUBE.pitchMin+CUBE.pitchMax)/2;
-    var amp=(CUBE.pitchMax-CUBE.pitchMin)/2;
-    var pitch=mid+amp*Math.sin(2*Math.PI*s/CUBE.pitchPeriod);
+    var pitch=(s*CUBE.pitchSpeed)%360;
     var orbit=yaw.toFixed(2)+'deg '+pitch.toFixed(2)+'deg '+CUBE.radius;
     for(var i=0;i<cubes.length;i++){
-      /* only animate cubes on a visible page to save cycles */
       var pg=cubes[i].closest('.page');
       if(pg && pg.classList.contains('active')) cubes[i].setAttribute('camera-orbit',orbit);
     }
